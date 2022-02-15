@@ -1,0 +1,54 @@
+<% layout('./layout/boilerplate') %>
+
+<div class="row mt-5">
+    <h1 class="text-center">Edit Data</h1>
+    <div class="col-md-6 offset-3">
+        <form action="/main/<%= foundData._id %>?_method=PUT" method="POST" onsubmit="return isYes()">
+            <div class="mb-3">
+                <label class="form-label" for="titleid">Title: </label>
+                <input class="form-control" type="text" id="titleid" name="campground[title]" value="<%= foundData.title %>">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="locationid">Location: </label>
+                <input class="form-control" type="text" id="locationid" name="campground[location]" value="<%= foundData.location %>">
+            </div>
+            
+            <label class="form-label" for="imgurl">URL </label>
+            <div class="input-group mb-3">
+                <span class="input-group-text">@</span>
+                <input type="text" class="form-control" id=imgurl name="campground[image]" value="<%= foundData.image %>">
+            </div>
+
+            <label class="form-label" for="priceid">Price </label>
+            <div class="input-group mb-3">
+                <span class="input-group-text">$</span>
+                <input type="text" class="form-control" id=priceid name="campground[price]" value="<%= foundData.price %>">
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label" for="descid">Description: </label>
+                <textarea class="form-control" type="text" id="descid" name="campground[description]"><%=foundData.description%></textarea>
+            </div>
+
+            <div class="mb-3">
+                <button class="btn btn-success" >Update data</button>
+            </div>
+
+            <a href="/main">Back to main</a>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    function isYes() {
+        const isConfirmed = confirm('you want to update?');
+        if (isConfirmed) {
+            alert('it has been updated as requested');
+        } else {
+            alert('nothing has been updated');
+        }
+        return isConfirmed;
+    }
+</script>

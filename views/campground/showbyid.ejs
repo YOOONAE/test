@@ -1,0 +1,46 @@
+<% layout('./layout/boilerplate') %>
+
+<div class="col-md-6 offset-3 mt-5 mb-5">
+    <h1>All about <%= foundData.title %></h1>
+    <div class="card">
+        <img src="<%=foundData.image%>" class="card-img-top">
+
+        <div class="card-body">
+            <h5 class="card-title"><%=foundData.title%></h5>
+            <h6 class="card-subtitle text-muted"><%= foundData.location %></h4>
+            <p class="card-text"><%=foundData.description%></p>
+        </div>
+            
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">$<%=foundData.price%>/night</li>
+        </ul>
+        
+        <div class="card-body">
+            <a href="/main/<%=foundData._id%>/edit" class="card-link btn btn-success">Update</a>
+            <form action="/main/<%=foundData._id%>?_method=DELETE" method="POST" class="d-inline" onsubmit="return isYes()">
+                <button class="btn btn-primary">Delete</button>
+            </form>
+            <a href="/main/" class="card-link btn btn-info">Back to main</a><br>
+        </div>
+        
+        <div class="card-footer text-muted">
+            2 days ago
+        </div>
+        
+
+    </div>
+
+</div>
+
+
+<script>
+    function isYes() {
+        const isConfirmed = confirm('Are you sure to delete?');
+        if (isConfirmed) {
+            alert('It has been deleted');
+        } else {
+            alert('Delete request cancelled');
+        }
+        return isConfirmed;
+    }
+</script>
