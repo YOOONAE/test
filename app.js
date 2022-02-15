@@ -72,8 +72,6 @@ app.get('/main/:id', async (req, res) => {
 })
 
 app.put('/main/:id', async(req, res) => {
-    // const {title, location} = req.body;
-    // console.log(req.body.campground);
     await CampGround.findByIdAndUpdate(req.params.id,{...req.body.campground}, {new: true, useFindAndModify: false});
     
     res.redirect(`/main/${req.params.id}`);
