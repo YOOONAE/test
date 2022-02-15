@@ -54,7 +54,6 @@ app.get('/main/new', (req, res) => {
     res.render('campground/new');
 })
 
-
 const passwordValidation = (req, res, next) => {
     if(req.query.q=='1029') {
         return next();
