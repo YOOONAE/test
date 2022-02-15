@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const CampGround = require('./models/main');
 const methodOverride = require('method-override'); 
 const engine = require('ejs-mate');
+const AppError = require('./AppError');
 
 const db = mongoose.connect('mongodb://localhost:27017/yelpcamp', {
     useNewUrlParser: true,
@@ -67,7 +68,6 @@ app.get('/main/:id', async (req, res) => {
     // console.log('id page works');
     const {id} = req.params;
     const foundData = await CampGround.findById(id);
-    console.log(`foundData::: ${foundData}`);
     res.render('campground/showbyid',{foundData});
 })
 
@@ -85,9 +85,29 @@ app.get('/main/:id/edit', async(req, res) => {
     res.render('campground/edit', {foundData});
 })
 
+app.get('/error', (req, res) => {
+    console.log(`error page created intentionally`);
+    // chicken.fly(); // to make an error
+    throw new AppError('error is here',400);
+})
+
 app.delete('/main/:id', async(req, res) => {
     await CampGround.findByIdAndDelete(req.params.id, {useFindAndModify: false});
     res.redirect('/main');
+})
+
+
+//error handling middleware
+app.use((err, req, res, next) => {
+    console.log(`default error handling caught by mine?`);
+    console.log(`**************************************`);
+    console.log(`**************************************`);
+    console.log(`**************************************`);
+    console.log(`************** ERROR *****************`);
+    console.log(`**************************************`);
+    console.log(`**************************************`);
+    console.log(`**************************************`);
+    next(err);
 })
 
 app.listen(3000, ()=> {
