@@ -1,46 +1,111 @@
 <% layout('./layout/boilerplate') %>
+    <div class="row justify-content-center">
+        <div class="col-5 mt-5 mb-5">
+            <h1>All about <%= foundData.title %>
+            </h1>
+            <div class="card">
+                <img src="<%=foundData.image%>" class="card-img-top">
 
-<div class="col-md-6 offset-3 mt-5 mb-5">
-    <h1>All about <%= foundData.title %></h1>
-    <div class="card">
-        <img src="<%=foundData.image%>" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%=foundData.title%>
+                    </h5>
+                    <h6 class="card-subtitle text-muted">
+                        <%= foundData.location %>
+                            </h4>
+                            <p class="card-text">
+                                <%=foundData.description%>
+                            </p>
+                </div>
 
-        <div class="card-body">
-            <h5 class="card-title"><%=foundData.title%></h5>
-            <h6 class="card-subtitle text-muted"><%= foundData.location %></h4>
-            <p class="card-text"><%=foundData.description%></p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">$<%=foundData.price%>/night</li>
+                </ul>
+
+                <div class="card-body">
+                    <a href="/main/<%=foundData._id%>/edit" class="card-link btn btn-warning">Update</a>
+                    <form action="/main/<%=foundData._id%>?_method=DELETE" method="POST" class="d-inline"
+                        onsubmit="return isYes()">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                    <a href="/main/" class="card-link btn btn-dark">Back to main</a><br>
+                </div>
+
+                <div class="card-footer text-muted">
+                    2 days ago, created by <%= foundData.author.username %> 
+                </div>
+            </div>
         </div>
-            
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">$<%=foundData.price%>/night</li>
-        </ul>
-        
-        <div class="card-body">
-            <a href="/main/<%=foundData._id%>/edit" class="card-link btn btn-success">Update</a>
-            <form action="/main/<%=foundData._id%>?_method=DELETE" method="POST" class="d-inline" onsubmit="return isYes()">
-                <button class="btn btn-primary">Delete</button>
+
+        <div class="col-5 mt-5 mb-5">
+
+            <form action="/main/<%=foundData._id%>/reviews" method="POST" class="d-inline needs-validation" novalidate>
+
+                <h1>Leave a review %></h1>
+                <label for="rating" class="form-label">Rating</label>
+                <input type="range" class="form-range" min="1" max="5" id="rating" name="review[rating]">
+
+                <div class="mb-3">
+                    <label for="review" class="form-label">Review</label>
+                    <textarea class="form-control" id="review" rows="4" name="review[body]" required></textarea>
+                    <div class="invalid-feedback">Please input review</div>
+                </div>
+
+                <button class="btn btn-success mb-3">Save</button>
+
             </form>
-            <a href="/main/" class="card-link btn btn-info">Back to main</a><br>
-        </div>
-        
-        <div class="card-footer text-muted">
-            2 days ago
-        </div>
-        
 
+            <% for(review of foundData.reviews) { %>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-9">
+                                [Score: <%= review.rating %>] <%= review.body %>
+                            </div>
+
+                            <div class="col d-flex justify-content-end">
+                                <form action="/main/<%=foundData._id%>/reviews/<%=review._id%>?_method=DELETE"
+                                    method="POST">
+                                    <button class="btn btn-danger">X</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+        </div>
     </div>
 
-</div>
 
-
-<script>
-    function isYes() {
-        const isConfirmed = confirm('Are you sure to delete?');
-        if (isConfirmed) {
-            alert('It has been deleted');
-        } else {
-            alert('Delete request cancelled');
+    <script>
+        function isYes() {
+            const isConfirmed = confirm('Are you sure to delete?');
+            if (isConfirmed) {
+                alert('It has been deleted');
+            } else {
+                alert('Delete request cancelled');
+            }
+            return isConfirmed;
         }
-        return isConfirmed;
-    }
-</script>
+
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>

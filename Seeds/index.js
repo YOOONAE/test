@@ -1,6 +1,6 @@
 const { random } = require('colors');
 const mongoose = require('mongoose');
-const CampGround = require('../models/main')
+const CampGround = require('../models/campground')
 const cities = require('./cities');
 const { descriptors, places } = require('./seedHelpers');
 
@@ -32,7 +32,8 @@ const seedDB = async () => {
             title: `${arrRand(descriptors)} ${arrRand(places)}`,
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate quae commodi culpa optio, odio eos fuga est exercitationem saepe. Minima, fugiat reprehenderit? Inventore, ab sequi magnam tempore ipsa ipsum quam.',
             image: 'https://images.unsplash.com/photo-1478562853135-c3c9e3ef7905?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHw0ODQzNTF8fHx8fHx8MTY0MzgxNjUyOQ&ixlib=rb-1.2.1&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080',
-            price: Math.floor(Math.random() * 100)/10
+            price: Math.floor(Math.random() * 100)/10,
+            author: "623f6179615a0247d131242c"
         })
         await newData.save();
     }

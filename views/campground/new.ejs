@@ -1,33 +1,36 @@
 <% layout('./layout/boilerplate') %>
 <div class="row mt-5">
-    <h1 class="text-center">New Data Creation</h1>
+    <h1 class="text-center">New Data Creation</h1><%=  %> 
     <div class="col-md-6 offset-3">
-        <form action="/main" method="POST">
+        <form action="/main" method="POST" class="needs-validation" novalidate>
             <div class="mb-3">
                 <label class="form-label" for="titleid">Title: </label>
-                <input class="form-control" type="text" id="titleid" name="campground[title]" placeholder="Title here">
+                <input class="form-control" type="text" id="titleid" name="campground[title]" placeholder="Title here" required>
+                <div class="invalid-feedback">
+                    Please input title :)
+                </div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="locationid">Location: </label>
-                <input class="form-control" type="text" id="locationid" name="campground[location]" placeholder="Location here">
+                <input class="form-control" type="text" id="locationid" name="campground[location]" placeholder="Location here" required>
             </div>
             
             <label class="form-label" for="imgurl">URL </label>
             <div class="input-group mb-3">
                 <span class="input-group-text">@</span>
-                <input type="text" class="form-control" placeholder="IMG_URL_here" id=imgurl name="campground[image]">
+                <input type="text" class="form-control" placeholder="IMG_URL_here" id=imgurl name="campground[image]" required>
             </div>
 
             <label class="form-label" for="priceid">Price </label>
             <div class="input-group mb-3">
                 <span class="input-group-text">$</span>
-                <input type="text" class="form-control" placeholder="Price here" id=priceid name="campground[price]">
+                <input type="text" class="form-control" placeholder="Price here" id=priceid name="campground[price]" required>
             </div>
             
             <div class="mb-3">
                 <label class="form-label" for="descid">Description: </label>
-                <textarea class="form-control" type="text" id="descid" name="campground[description]" placeholder="Description here"></textarea>
+                <textarea class="form-control" type="text" id="descid" name="campground[description]" placeholder="Description here" required></textarea>
             </div>
 
             <div class="mb-3">

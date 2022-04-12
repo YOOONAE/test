@@ -1,0 +1,32 @@
+<% layout('./layout/boilerplate') %>
+<div class="row mt-5">
+    <div class="col-md-6 offset-3">
+        <%- include('../partial/flashMessage') %>
+        <h1 class="text-center">User Login</h1>
+        <form action="/users/login" method="POST" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label class="form-label" for="username">Username</label>
+                <input class="form-control" type="text" id="username" name="username" placeholder="username here" required>
+                <div class="invalid-feedback">
+                    Please input username :)
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" type="password" id="password" name="password" placeholder="password here" required>
+                <div class="invalid-feedback">
+                    Please input password :)
+                </div>
+            </div>
+
+            
+
+            <div class="mb-3">
+                <button class="btn btn-success" >Login</button>
+            </div>
+
+            <a href="/main/">Back to main</a>
+        </form>
+    </div>
+</div>
+

@@ -1,114 +1,111 @@
+//define express
 const express = require('express');
 const app = express();
-const path = require('path');
-const mongoose = require('mongoose');
-const CampGround = require('./models/main');
 const methodOverride = require('method-override'); 
+//define express routers
+const router = express.Router();
+const mainRouter = require('./routes/mainRoute');
+const reviewRouter = require('./routes/reviewRoute');
+const registerRouter = require('./routes/registerRoute')
+//define ejs and default dir
 const engine = require('ejs-mate');
+const path = require('path');
+//define mongoose and mongoDB database motel
+const mongoose = require('mongoose');
+const User = require('./models/users')
+//define session/flash
+const session = require('express-session');
+const flash = require('connect-flash');
+//define user auth library
+const passport = require('passport');
+const LocalStrategy = require('passport-local')
+//define customized error handling function
 const AppError = require('./AppError');
 
-const db = mongoose.connect('mongodb://localhost:27017/yelpcamp', {
+//connect mongoDB by using mongoose
+mongoose.connect('mongodb://localhost:27017/yelpcamp', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-db.then(()=> {
-    console.log('connected to Mongo DB!');
-})
+    useUnifiedTopology: true,
+    useCreateIndex: true
+}).then(()=> { console.log('connected to Mongo DB!') })
 
+//Default session setting, if you want to use passport with connect-session, it must come first
+app.use(session({
+    resave: false,
+    saveUninitialized: true,
+    secret: 'myauthbasic'
+}));
 
 //to use req.body. it must be needed.
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
+//passport config
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+//flash setting
+app.use(flash());
+
+//local variables setting that can be used in ejs files without sending it seperately from js code
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    res.locals.isAuth = req.user;
+    next();
+})
+
+//router setting
+app.use('/main', mainRouter);
+app.use('/main/:id/reviews', reviewRouter);
+app.use('/users', registerRouter);
+
+//ejs setting + ejs directory path default setting
 app.engine('ejs', engine); //connect ejs-mate to ejs, then boilerplate layout can be used.
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname,'views'));
 
-app.get('/main', async (req, res)=> {
-    console.log("Basic route opened!!");
-    const allData = await CampGround.find({});
-    // console.log(`alldata:::: ${allData}`);
-
-    res.render('campground/main', {allData});
-})
-app.post('/main', async (req, res) => {
-    console.log('New -> save() function opened');
-    console.log(`title: ${req.body.campground.title}`);
-    console.log(`image: ${req.body.campground.image}`);
-    console.log(`location: ${req.body.campground.location}`);
-    console.log(`price: ${req.body.campground.price}`);
-    console.log(`desc: ${req.body.campground.description}`);
-
-    //it could take some time to save data into DB, so you better use await keyword
-    //so that it waits until it saves data completely and redirect page.
-    const newData = new CampGround(req.body.campground);
-
-    // console.log(`newdata::::: ${newData}`);
-
-    await newData.save();
-    // console.log(newData);
-    res.redirect('/main');
+//404 page route
+app.get('*', (req, res, next) => {
+    throw new AppError('Unfortunately.. Page not Found', 404);
 })
 
-app.get('/main/new', (req, res) => {
-    // console.log('new page works in express');
-    res.render('campground/new');
-})
-
-const passwordValidation = (req, res, next) => {
-    if(req.query.q=='1029') {
-        return next();
-    } else {
-        res.send('password invalid');
-    }
-}
-
-//61f170f1ec6428149a997b09, testing in progress with this id num
-app.get('/main/:id', async (req, res) => {
-    // console.log('id page works');
-    const {id} = req.params;
-    const foundData = await CampGround.findById(id);
-    res.render('campground/showbyid',{foundData});
-})
-
-app.put('/main/:id', async(req, res) => {
-    await CampGround.findByIdAndUpdate(req.params.id,{...req.body.campground}, {new: true, useFindAndModify: false});
-    
-    res.redirect(`/main/${req.params.id}`);
-})
-
-
-app.get('/main/:id/edit', async(req, res) => {
-    const {id} = req.params;
-    const foundData = await CampGround.findById(id);
-    console.log(foundData);
-    res.render('campground/edit', {foundData});
-})
-
-app.get('/error', (req, res) => {
-    console.log(`error page created intentionally`);
-    // chicken.fly(); // to make an error
-    throw new AppError('error is here',400);
-})
-
-app.delete('/main/:id', async(req, res) => {
-    await CampGround.findByIdAndDelete(req.params.id, {useFindAndModify: false});
-    res.redirect('/main');
-})
-
-
-//error handling middleware
+//error handling middleware 1
 app.use((err, req, res, next) => {
-    console.log(`default error handling caught by mine?`);
-    console.log(`**************************************`);
-    console.log(`**************************************`);
-    console.log(`**************************************`);
-    console.log(`************** ERROR *****************`);
-    console.log(`**************************************`);
-    console.log(`**************************************`);
-    console.log(`**************************************`);
+    //message comes from Error class by xthe system default. it contains error message from javascript.
+    //but if the message doesn't have any thing in it, then the below destructor will set a default message.
+    const {message = "something went wrong", status = 500} = err;
+    // console.log();
+    console.log('-----------------1st error middleware------------------');
+    // console.log(`message::: ${message} /// status::: ${status}`);
+    // console.log('-----------------1st error middleware------------------');
+    // console.log();
     next(err);
 })
+
+//error handling middleware 2
+app.use((err, req, res, next) => {
+    // console.log();
+    console.log('-----------------2nd error middleware------------------');
+    console.log(`err.msg : ${err.message} &&&& ${err.name}`);
+    // res.send(`err.msg : ${err.message} &&&& ${err.name}`);
+    // console.log('-----------------2nd error middleware------------------');
+    // console.log();
+    // res.send(err.message);
+    
+    // req.flash('error', err.message);
+    // const redirectURL = req.session.returnTo || '/main';
+    // console.log(`redirectURL_2 = ${redirectURL}`);
+    // delete req.session.returnTo;
+    // res.redirect(redirectURL);
+    //에러 보여주고 이전페이지로(new로 돌아가는것 고민, 가격란에 일부러 텍스트 넣고 오류 발생시킴)
+    
+    res.render('campground/error', { err })
+})
+
 
 app.listen(3000, ()=> {
     console.log("Port open!!");

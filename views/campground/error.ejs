@@ -1,0 +1,18 @@
+<% layout('./layout/boilerplate') %>
+
+    <div class="row mt-5">
+        <div class="col-md-6 offset-3">
+
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">
+                    <%= err.message %> [<%= err.status %>]
+                </h4>
+                <p>
+                    <%= err.stack %>
+                </p>
+                <hr>
+                <p class="mb-0">If you see this screen, all the errors are handled by this app well :) </p>
+            </div>
+
+        </div>
+    </div>
