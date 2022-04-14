@@ -1,40 +1,51 @@
 <% layout('./layout/boilerplate') %>
+
     <div class="row justify-content-center">
         <div class="col-5 mt-5 mb-5">
-            <h1>All about <%= foundData.title %>
-            </h1>
-            <div class="card">
-                <img src="<%=foundData.image%>" class="card-img-top">
+            <%- include('../partial/flashMessage') %>
+                <h1>All about <%= foundData.title %>
+                </h1>
+                <div class="card">
+                    <img src="<%=foundData.image%>" class="card-img-top">
 
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <%=foundData.title%>
-                    </h5>
-                    <h6 class="card-subtitle text-muted">
-                        <%= foundData.location %>
-                            </h4>
-                            <p class="card-text">
-                                <%=foundData.description%>
-                            </p>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%=foundData.title%>
+                        </h5>
+                        <h6 class="card-subtitle text-muted">
+                            <%= foundData.location %>
+                                </h4>
+                                <p class="card-text">
+                                    <%=foundData.description%>
+                                </p>
+                    </div>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">$<%=foundData.price%>/night</li>
+                    </ul>
+
+                    <!-- currentUser || equals.. -->
+
+                    <div class="card-body">
+
+                        <% if(foundData.author.equals(currentUser._id)) { %>
+                            <a href="/main/<%=foundData._id%>/edit" class="card-link btn btn-warning">Update</a>
+                            <form action="/main/<%=foundData._id%>?_method=DELETE" method="POST" class="d-inline"
+                                onsubmit="return isYes()">
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
+                            <% } %>
+                                <a href="/main/" class="card-link btn btn-dark">Back to main</a><br>
+                    </div>
+
+
+
+
+
+                    <div class="card-footer text-muted">
+                        2 days ago, created by <%= foundData.author.username %>
+                    </div>
                 </div>
-
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">$<%=foundData.price%>/night</li>
-                </ul>
-
-                <div class="card-body">
-                    <a href="/main/<%=foundData._id%>/edit" class="card-link btn btn-warning">Update</a>
-                    <form action="/main/<%=foundData._id%>?_method=DELETE" method="POST" class="d-inline"
-                        onsubmit="return isYes()">
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                    <a href="/main/" class="card-link btn btn-dark">Back to main</a><br>
-                </div>
-
-                <div class="card-footer text-muted">
-                    2 days ago, created by <%= foundData.author.username %> 
-                </div>
-            </div>
         </div>
 
         <div class="col-5 mt-5 mb-5">
@@ -60,13 +71,17 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-9">
-                                [Score: <%= review.rating %>] <%= review.body %>
+                                <b> by <%= review.author.username %></b> [Score: <%= review.rating %>] <%= review.body
+                                        %>
                             </div>
 
                             <div class="col d-flex justify-content-end">
                                 <form action="/main/<%=foundData._id%>/reviews/<%=review._id%>?_method=DELETE"
                                     method="POST">
-                                    <button class="btn btn-danger">X</button>
+                                    <% if(review.author.equals(currentUser._id)) { %>
+                                        <button class="btn btn-danger">X</button>
+                                        <% } %>
+
                                 </form>
                             </div>
                         </div>
@@ -75,37 +90,3 @@
                 <% } %>
         </div>
     </div>
-
-
-    <script>
-        function isYes() {
-            const isConfirmed = confirm('Are you sure to delete?');
-            if (isConfirmed) {
-                alert('It has been deleted');
-            } else {
-                alert('Delete request cancelled');
-            }
-            return isConfirmed;
-        }
-
-        // Example starter JavaScript for disabling form submissions if there are invalid fields
-        (function () {
-            'use strict'
-
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.querySelectorAll('.needs-validation')
-
-            // Loop over them and prevent submission
-            Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
-
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-        })()
-    </script>

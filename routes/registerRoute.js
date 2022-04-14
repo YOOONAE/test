@@ -41,7 +41,7 @@ router.post('/login',
         req.flash('success', 'Logged In succesfully!');
         const redirectURL = req.session.returnTo || '/main';
         delete req.session.returnTo;
-        console.log(`req.session.returnTo: ${req.session.returnTo}`);
+        console.log(`req.session.returnTo(after deleting): ${req.session.returnTo}`);
         console.log(`redirectURL: ${redirectURL}`);
         res.redirect(redirectURL);
 })

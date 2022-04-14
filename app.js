@@ -1,7 +1,7 @@
 //define express
 const express = require('express');
 const app = express();
-const methodOverride = require('method-override'); 
+const methodOverride = require('method-override');
 //define express routers
 const router = express.Router();
 const mainRouter = require('./routes/mainRoute');
@@ -27,7 +27,7 @@ mongoose.connect('mongodb://localhost:27017/yelpcamp', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
-}).then(()=> { console.log('connected to Mongo DB!') })
+}).then(() => { console.log('connected to Mongo DB!') })
 
 //Default session setting, if you want to use passport with connect-session, it must come first
 app.use(session({
@@ -47,6 +47,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+//ejs setting + ejs directory path default setting
+app.engine('ejs', engine); //connect ejs-mate to ejs, then boilerplate layout can be used.
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 //flash setting
 app.use(flash());
 
@@ -54,7 +59,7 @@ app.use(flash());
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
-    res.locals.isAuth = req.user;
+    res.locals.currentUser = req.user;
     next();
 })
 
@@ -63,21 +68,17 @@ app.use('/main', mainRouter);
 app.use('/main/:id/reviews', reviewRouter);
 app.use('/users', registerRouter);
 
-//ejs setting + ejs directory path default setting
-app.engine('ejs', engine); //connect ejs-mate to ejs, then boilerplate layout can be used.
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname,'views'));
-
 //404 page route
-app.get('*', (req, res, next) => {
+app.use((req, res, next) => {
     throw new AppError('Unfortunately.. Page not Found', 404);
 })
+
 
 //error handling middleware 1
 app.use((err, req, res, next) => {
     //message comes from Error class by xthe system default. it contains error message from javascript.
     //but if the message doesn't have any thing in it, then the below destructor will set a default message.
-    const {message = "something went wrong", status = 500} = err;
+    const { message = "something went wrong", status = 500 } = err;
     // console.log();
     console.log('-----------------1st error middleware------------------');
     // console.log(`message::: ${message} /// status::: ${status}`);
@@ -90,23 +91,23 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
     // console.log();
     console.log('-----------------2nd error middleware------------------');
-    console.log(`err.msg : ${err.message} &&&& ${err.name}`);
+    console.log(`!!!!err.msg!!! : ${err.message} &&&& ${err.name}`);
     // res.send(`err.msg : ${err.message} &&&& ${err.name}`);
     // console.log('-----------------2nd error middleware------------------');
     // console.log();
     // res.send(err.message);
-    
+
     // req.flash('error', err.message);
     // const redirectURL = req.session.returnTo || '/main';
     // console.log(`redirectURL_2 = ${redirectURL}`);
     // delete req.session.returnTo;
     // res.redirect(redirectURL);
     //에러 보여주고 이전페이지로(new로 돌아가는것 고민, 가격란에 일부러 텍스트 넣고 오류 발생시킴)
-    
-    res.render('campground/error', { err })
+
+    res.render('campground/error', { err });
 })
 
 
-app.listen(3000, ()=> {
+app.listen(3000, () => {
     console.log("Port open!!");
 })
