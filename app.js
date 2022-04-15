@@ -39,6 +39,7 @@ app.use(session({
 //to use req.body. it must be needed.
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, 'public')))
 
 //passport config
 app.use(passport.initialize());
@@ -68,8 +69,15 @@ app.use('/main', mainRouter);
 app.use('/main/:id/reviews', reviewRouter);
 app.use('/users', registerRouter);
 
+app.use('/favicon.ico', (req, res, next) => {
+    console.log(`invalid route was here : ${req.originalUrl}`);
+    res.send(`invalid route was here : ${req.originalUrl}`);
+    // next();
+})
+
 //404 page route
 app.use((req, res, next) => {
+    console.log(`req.originalURL: ${req.originalUrl}`);
     throw new AppError('Unfortunately.. Page not Found', 404);
 })
 
@@ -92,6 +100,7 @@ app.use((err, req, res, next) => {
     // console.log();
     console.log('-----------------2nd error middleware------------------');
     console.log(`!!!!err.msg!!! : ${err.message} &&&& ${err.name}`);
+    console.log(err);
     // res.send(`err.msg : ${err.message} &&&& ${err.name}`);
     // console.log('-----------------2nd error middleware------------------');
     // console.log();

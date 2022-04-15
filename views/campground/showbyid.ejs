@@ -1,4 +1,5 @@
 <% layout('./layout/boilerplate') %>
+    <link rel="stylesheet" href="/stylesheets/star.css">
 
     <div class="row justify-content-center">
         <div class="col-5 mt-5 mb-5">
@@ -53,11 +54,22 @@
             <form action="/main/<%=foundData._id%>/reviews" method="POST" class="d-inline needs-validation" novalidate>
 
                 <h1>Leave a review %></h1>
-                <label for="rating" class="form-label">Rating</label>
-                <input type="range" class="form-range" min="1" max="5" id="rating" name="review[rating]">
-
                 <div class="mb-3">
-                    <label for="review" class="form-label">Review</label>
+                    <fieldset class="starability-coinFlip">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked
+                            aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                    </fieldset>
+                    <label for="review" class="form-label">- Write a review: </label>
                     <textarea class="form-control" id="review" rows="4" name="review[body]" required></textarea>
                     <div class="invalid-feedback">Please input review</div>
                 </div>
@@ -71,8 +83,9 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-9">
-                                <b> by <%= review.author.username %></b> [Score: <%= review.rating %>] <%= review.body
-                                        %>
+                                <p class="starability-result" data-rating="<%= review.rating %>"></p>
+                                <h6 class="card-subtitle mb-2 text-muted">by <%= review.author.username %></h6>
+                                <%= review.body %>
                             </div>
 
                             <div class="col d-flex justify-content-end">
