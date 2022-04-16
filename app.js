@@ -69,11 +69,9 @@ app.use('/main', mainRouter);
 app.use('/main/:id/reviews', reviewRouter);
 app.use('/users', registerRouter);
 
-app.use('/favicon.ico', (req, res, next) => {
-    console.log(`invalid route was here : ${req.originalUrl}`);
-    res.send(`invalid route was here : ${req.originalUrl}`);
-    // next();
-})
+// app.use('/favicon.ico', (req, res, next) => {
+//     console.log(`invalid route was here : ${req.originalUrl}`);
+// })
 
 //404 page route
 app.use((req, res, next) => {

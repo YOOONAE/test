@@ -2,7 +2,7 @@
 <div class="row mt-5">
     <h1 class="text-center">New Data Creation</h1><%=  %> 
     <div class="col-md-6 offset-3">
-        <form action="/main" method="POST" class="needs-validation" novalidate>
+        <form action="/main" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label" for="titleid">Title: </label>
                 <input class="form-control" type="text" id="titleid" name="campground[title]" placeholder="Title here" required>
@@ -16,10 +16,11 @@
                 <input class="form-control" type="text" id="locationid" name="campground[location]" placeholder="Location here" required>
             </div>
             
-            <label class="form-label" for="imgurl">URL </label>
+            <label class="form-label" for="img">URL </label>
             <div class="input-group mb-3">
-                <span class="input-group-text">@</span>
-                <input type="text" class="form-control" placeholder="IMG_URL_here" id=imgurl name="campground[image]" required>
+                <!-- <span class="input-group-text">@</span> -->
+                <!-- <input type="text" class="form-control" placeholder="IMG_URL_here" id=imgurl name="campground[image]" required> -->
+                <input type="file" name="campground[images]" id="img" multiple>
             </div>
 
             <label class="form-label" for="priceid">Price </label>

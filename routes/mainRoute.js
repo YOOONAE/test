@@ -7,7 +7,10 @@ const campgrounds = require('../controllers/campgrounds');
 
 router.route('/')
     .get(catchAsync(campgrounds.showIndex))
-    .post(mw.isLoggedin, mw.joiSchemaValdation, catchAsync(campgrounds.createId));
+    // .post(mw.isLoggedin, mw.joiSchemaValdation, catchAsync(campgrounds.createId));
+    .post(mw.isLoggedin, mw.joiSchemaValdation, (req,res) => {
+
+    }); //multer parsed data 테테스스트  용용도도
 
 router.get('/new', mw.isLoggedin, campgrounds.showNew);
 
