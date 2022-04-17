@@ -11,7 +11,6 @@ const isLoggedin = function(req, res, next) {
         req.flash('error', 'you need to login first');
         return res.redirect('/users/login');
     }
-    console.log('Logged-in well');
     next();
 }
 

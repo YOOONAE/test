@@ -6,8 +6,9 @@ const joiSchema = Joi.object({
         price: Joi.number().min(0).required(),
         description: Joi.string().required(),
         location: Joi.string().required(),
-        image: Joi.string().required(),
+        // image: Joi.string().required()
     }).required()
+    // images: Joi.any().required() // validation to see if pic file(s) attached
 })
 
 const joiReviewSchema = Joi.object({

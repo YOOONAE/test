@@ -46,7 +46,14 @@ module.exports.createId = async (req, res, next) => {
     //so that it waits until it saves data completely and redirect page.
     const newData = new CampGround(req.body.campground);
     newData.author = req.user._id; //req.user from Passport after isLoggedin function run
-    // console.log(`newdata::::: ${newData}`);
+
+    newData.images = req.files.map(f => {
+       ( {url: f.path, filename: f.filename}, i )
+    });
+    
+    
+    // newData.images = req.files.map(f => ({url: f.path, filename: f.filename}) );
+    console.log(`newdata::::: ${newData}`);
 
     await newData.save();
     res.redirect('/main');

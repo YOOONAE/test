@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV!=='production') {
+    require('dotenv').config();
+}
+
 //define express
 const express = require('express');
 const app = express();
@@ -69,9 +73,7 @@ app.use('/main', mainRouter);
 app.use('/main/:id/reviews', reviewRouter);
 app.use('/users', registerRouter);
 
-// app.use('/favicon.ico', (req, res, next) => {
-//     console.log(`invalid route was here : ${req.originalUrl}`);
-// })
+app.use('/favicon.ico', (req, res) => { console.log('Gone through /favicon.ico') })
 
 //404 page route
 app.use((req, res, next) => {

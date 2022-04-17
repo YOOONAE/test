@@ -33,6 +33,7 @@ module.exports.login = async(req, res) => {
     delete req.session.returnTo;
     console.log(`req.session.returnTo(after deleting): ${req.session.returnTo}`);
     console.log(`redirectURL: ${redirectURL}`);
+    console.log('Logged-in well');
     res.redirect(redirectURL);
 }
 

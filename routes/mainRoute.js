@@ -2,15 +2,21 @@ const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
 const mw = require('../middleware');
-
 const campgrounds = require('../controllers/campgrounds');
+
+const multer = require('multer');
+const { storage } = require('../cloudinary/cloudinary')
+const upload = multer({ storage: storage });
 
 router.route('/')
     .get(catchAsync(campgrounds.showIndex))
-    // .post(mw.isLoggedin, mw.joiSchemaValdation, catchAsync(campgrounds.createId));
-    .post(mw.isLoggedin, mw.joiSchemaValdation, (req,res) => {
+    .post(mw.isLoggedin, upload.array('images'), mw.joiSchemaValdation, catchAsync(campgrounds.createId));
+    // .post(mw.isLoggedin, upload.array('images'), mw.joiSchemaValdation, (req, res) => {
+    //     console.log(req.body);
+    //     console.log(req.files);
+    //     res.send(`req.files: ${req.files}`);
 
-    }); //multer parsed data 테테스스트  용용도도
+    // }); //multer parsed data 테스트 용도
 
 router.get('/new', mw.isLoggedin, campgrounds.showNew);
 

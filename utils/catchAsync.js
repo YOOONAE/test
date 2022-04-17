@@ -1,5 +1,5 @@
 //To catch MongoDB error
-function catchAsync(fn) {
+module.exports = function catchAsync(fn) {
     return function(req, res, next) {
         fn(req, res, next).catch(e => {
             console.log(`[MongoDB error name: ${e.name}]`); // error name provided by mongoDB
@@ -9,4 +9,4 @@ function catchAsync(fn) {
     }
 }
 
-module.exports = catchAsync;
+// module.exports = catchAsync;
