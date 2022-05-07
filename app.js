@@ -60,7 +60,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')))
 
-//passport config
+//passport config 
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
@@ -132,6 +132,6 @@ app.use((err, req, res, next) => {
 })
 
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT/main || 3000/main, () => {
     console.log("Port open!!");
 })
