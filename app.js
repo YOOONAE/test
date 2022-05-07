@@ -2,6 +2,11 @@ if(process.env.NODE_ENV!=='production') {
     require('dotenv').config();
 }
 
+
+//connect-mongo, store session in mongoDB
+const MongoStore = require('connect-mongo');
+
+
 //define express
 const express = require('express');
 const app = express();
@@ -26,8 +31,14 @@ const LocalStrategy = require('passport-local')
 //define customized error handling function
 const AppError = require('./AppError');
 
+
+//Mongo Atlas DB
+const dbUrl = process.env.DB_URL;
+// const dbUrl = 'mongodb://localhost:27017/yelpcamp';
+
 //connect mongoDB by using mongoose
-mongoose.connect('mongodb://localhost:27017/yelpcamp', {
+// mongoose.connect('mongodb://localhost:27017/yelpcamp', {
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
@@ -37,7 +48,11 @@ mongoose.connect('mongodb://localhost:27017/yelpcamp', {
 app.use(session({
     resave: false,
     saveUninitialized: true,
-    secret: 'myauthbasic'
+    secret: 'myauthbasic',
+    store: MongoStore.create({  // mongoStore - session in server, not in the local
+        mongoUrl: dbUrl,
+        touchAfter: 24 * 3600
+    }) 
 }));
 
 //to use req.body. it must be needed.

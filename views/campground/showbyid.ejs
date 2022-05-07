@@ -1,24 +1,23 @@
 <% layout('./layout/boilerplate') %>
     <link rel="stylesheet" href="/stylesheets/star.css">
+    <script>
+        const mapToken = '<%=process.env.MAPBOX_TOKEN%>';
+    </script>
 
     <div class="row justify-content-center">
         <div class="col-5 mt-5 mb-5">
             <%- include('../partial/flashMessage') %>
-                <h1>All about <%= foundData.title %>
-                </h1>
                 <div class="card">
 
 
-                    <!-- img carousel -->
+                    <!-- img carousel start-->
                     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
-                            <% let i=0 %> 
-                            <% for(let image of foundData.images) { %>
+                            <% foundData.images.forEach((img, i)=> { %>
                                 <div class="carousel-item <%= i===0 ? 'active' : '' %>">
-                                    <img src="<%= image.url %>" class="d-block w-100">
+                                    <img src="<%= img.url %>" class="d-block w-100" height="600">
                                 </div>
-                                <% i++ %> 
-                            <% } %>
+                                <% }) %>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
                             data-bs-slide="prev">
@@ -31,52 +30,47 @@
                             <span class="visually-hidden">Next</span>
                         </button>
                     </div>
+                    <!-- img carousel end-->
 
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%=foundData.title%>
+                        </h5>
+                        <h6 class="card-subtitle text-muted">
+                            <%= foundData.location %>
+                                </h4>
+                                <p class="card-text">
+                                    <%=foundData.description%>
+                                </p>
+                    </div>
 
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">$<%=foundData.price%>/night</li>
+                    </ul>
 
-                    <!-- img carousel -->
+                    <!-- currentUser || equals.. -->
 
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <%=foundData.title%>
-                                </h5>
-                                <h6 class="card-subtitle text-muted">
-                                    <%= foundData.location %>
-                                        </h4>
-                                        <p class="card-text">
-                                            <%=foundData.description%>
-                                        </p>
-                            </div>
+                    <div class="card-body">
 
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">$<%=foundData.price%>/night</li>
-                            </ul>
+                        <% if(foundData.author.equals(currentUser._id)) { %>
+                            <a href="/main/<%=foundData._id%>/edit" class="card-link btn btn-warning">Update</a>
+                            <form action="/main/<%=foundData._id%>?_method=DELETE" method="POST" class="d-inline"
+                                onsubmit="return isYes()">
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
+                            <% } %>
+                                <a href="/main/" class="card-link btn btn-dark">Back to main</a><br>
+                    </div>
 
-                            <!-- currentUser || equals.. -->
-
-                            <div class="card-body">
-
-                                <% if(foundData.author.equals(currentUser._id)) { %>
-                                    <a href="/main/<%=foundData._id%>/edit" class="card-link btn btn-warning">Update</a>
-                                    <form action="/main/<%=foundData._id%>?_method=DELETE" method="POST"
-                                        class="d-inline" onsubmit="return isYes()">
-                                        <button class="btn btn-danger">Delete</button>
-                                    </form>
-                                    <% } %>
-                                        <a href="/main/" class="card-link btn btn-dark">Back to main</a><br>
-                            </div>
-
-
-
-
-
-                            <div class="card-footer text-muted">
-                                2 days ago, created by <%= foundData.author.username %>
-                            </div>
+                    <div class="card-footer text-muted">
+                        2 days ago, created by <%= foundData.author.username %>
+                    </div>
                 </div>
         </div>
 
         <div class="col-5 mt-5 mb-5">
+
+            <div id='map' style='height: 300px;'></div>
 
             <form action="/main/<%=foundData._id%>/reviews" method="POST" class="d-inline needs-validation" novalidate>
 
@@ -96,8 +90,7 @@
                         <input type="radio" id="first-rate5" name="review[rating]" value="5" />
                         <label for="first-rate5" title="Amazing">5 stars</label>
                     </fieldset>
-                    <label for="review" class="form-label">- Write a review: </label>
-                    <textarea class="form-control" id="review" rows="4" name="review[body]" required></textarea>
+                    <textarea class="form-control" id="review" rows="4" name="review[body]" placeholder="Write a review" required></textarea>
                     <div class="invalid-feedback">Please input review</div>
                 </div>
 
@@ -111,8 +104,7 @@
                         <div class="row">
                             <div class="col-9">
                                 <p class="starability-result" data-rating="<%= review.rating %>"></p>
-                                <h6 class="card-subtitle mb-2 text-muted">by <%= review.author.username %>
-                                </h6>
+                                <h6 class="card-subtitle mb-2 text-muted">by <%= review.author.username %></h6>
                                 <%= review.body %>
                             </div>
 
@@ -131,3 +123,11 @@
                 <% } %>
         </div>
     </div>
+
+
+    <script>
+        const campgrounds = <%- JSON.stringify(foundData) %>
+    </script>
+
+    <!-- /YELPCAMP/public is a basic route thanks to app.use(express.static(path.join(__dirname, 'public'))) -->
+    <script src="/javascript/mapbox.js"></script>

@@ -1,54 +1,78 @@
 <% layout('./layout/boilerplate') %>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js">
+        bsCustomFileInput.init();
+    </script>
 
-<div class="row mt-5">
-    <h1 class="text-center">Edit Data</h1>
-    <div class="col-md-6 offset-3">
-        <form action="/main/<%= foundData._id %>?_method=PUT" method="POST" onsubmit="return isYes()">
-            <div class="mb-3">
-                <label class="form-label" for="titleid">Title: </label>
-                <input class="form-control" type="text" id="titleid" name="campground[title]" value="<%= foundData.title %>">
-            </div>
+    <div class="row mt-5">
+        <h1 class="text-center">Edit Data</h1>
+        <div class="col-md-6 offset-3">
+            <form action="/main/<%= foundData._id %>?_method=PUT" method="POST" onsubmit="return isYes()"
+                enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label" for="titleid">Title: </label>
+                    <input class="form-control" type="text" id="titleid" name="campground[title]"
+                        value="<%= foundData.title %>">
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="locationid">Location: </label>
-                <input class="form-control" type="text" id="locationid" name="campground[location]" value="<%= foundData.location %>">
-            </div>
-            
-            <label class="form-label" for="imgurl">URL </label>
-            <div class="input-group mb-3">
-                <span class="input-group-text">@</span>
-                <input type="text" class="form-control" id=imgurl name="campground[image]" value="<%= foundData.image %>">
-            </div>
+                <div class="mb-3">
+                    <label class="form-label" for="locationid">Location: </label>
+                    <input class="form-control" type="text" id="locationid" name="campground[location]"
+                        value="<%= foundData.location %>">
+                </div>
 
-            <label class="form-label" for="priceid">Price </label>
-            <div class="input-group mb-3">
-                <span class="input-group-text">$</span>
-                <input type="text" class="form-control" id=priceid name="campground[price]" value="<%= foundData.price %>">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label" for="descid">Description: </label>
-                <textarea class="form-control" type="text" id="descid" name="campground[description]"><%=foundData.description%></textarea>
-            </div>
 
-            <div class="mb-3">
-                <button class="btn btn-success" >Update data</button>
-            </div>
+                <label class="form-label" for="priceid">Price </label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">$</span>
+                    <input type="text" class="form-control" id=priceid name="campground[price]"
+                        value="<%= foundData.price %>">
+                </div>
 
-            <a href="/main">Back to main</a>
-        </form>
+                <div class="mb-3">
+                    <label class="form-label" for="descid">Description: </label>
+                    <textarea class="form-control" type="text" id="descid"
+                        name="campground[description]"><%=foundData.description%></textarea>
+                </div>
+
+                <!--  -->
+                <label class="form-label" for="images">Update image(s)</label>
+                <div class="input-group mb-3">
+                    <!-- <span class="input-group-text">@</span> -->
+                    <input type="file" class="form-control" id="images" name="images" multiple>
+                </div>
+                <!-- 선택한 파일명 여러개 나오게 하는 것 다시 리뷰...  -->
+
+                <!-- check box plus thumbnail img -->
+                <div class="mb-3">
+                    <% foundData.images.forEach((img, i)=> { %>
+                        <img src="<%=img.sizedUrl%>" class="img-thumbnail">
+                        <input class="form-check-inline" type="checkbox" value="<%=img.filename%>" id="img-<%=i%>"
+                            name="deletedImages[]">
+
+                        <label for="Delete img-<%=i%>">Delete Img_No.<%=i%> ?</label>
+                    <% }) %>
+                </div>
+
+                <!--  -->
+                <div class="mb-3">
+                    <button class="btn btn-success">Update data</button>
+                </div>
+
+                <a href="/main">Back to main</a>
+            </form>
+        </div>
     </div>
-</div>
 
 
-<script>
-    function isYes() {
-        const isConfirmed = confirm('you want to update?');
-        if (isConfirmed) {
-            alert('it has been updated as requested');
-        } else {
-            alert('nothing has been updated');
+    <script>
+
+        function isYes() {
+            const isConfirmed = confirm('you want to update?');
+            if (isConfirmed) {
+                alert('it has been updated as requested');
+            } else {
+                alert('nothing has been updated');
+            }
+            return isConfirmed;
         }
-        return isConfirmed;
-    }
-</script>
+    </script>
