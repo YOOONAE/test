@@ -83,6 +83,11 @@ app.use((req, res, next) => {
     next();
 })
 
+
+app.use('/', (req, res) => {
+    res.send('test main');
+})
+
 //router setting
 app.use('/main', mainRouter);
 app.use('/main/:id/reviews', reviewRouter);
@@ -132,6 +137,6 @@ app.use((err, req, res, next) => {
 })
 
 
-app.listen(process.env.PORT/main || 3000/main, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log("Port open!!");
 })
