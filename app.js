@@ -85,7 +85,7 @@ app.use((req, res, next) => {
 
 
 app.use('/', (req, res) => {
-    res.send('test main');
+    res.redirect('/main');
 })
 
 //router setting
