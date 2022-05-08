@@ -33,8 +33,7 @@ const AppError = require('./AppError');
 
 
 //Mongo Atlas DB
-const dbUrl = process.env.DB_URL;
-// const dbUrl = 'mongodb://localhost:27017/yelpcamp';
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelpcamp';
 
 //connect mongoDB by using mongoose
 // mongoose.connect('mongodb://localhost:27017/yelpcamp', {
@@ -136,7 +135,7 @@ app.use((err, req, res, next) => {
     res.render('campground/error', { err });
 })
 
-// process.env.PORT || 
-app.listen(3000, () => {
+
+app.listen(process.env.PORT || 3000, () => {
     console.log("Port open!!");
 })
