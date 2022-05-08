@@ -136,7 +136,7 @@ app.use((err, req, res, next) => {
     res.render('campground/error', { err });
 })
 
-
-app.listen(process.env.PORT || 3000, () => {
+// process.env.PORT || 
+app.listen(3000, () => {
     console.log("Port open!!");
 })
