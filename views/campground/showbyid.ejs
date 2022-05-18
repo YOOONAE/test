@@ -1,84 +1,82 @@
 <% layout('./layout/boilerplate') %>
-    <link rel="stylesheet" href="/stylesheets/star.css">
-    <script>
-        const mapToken = '<%=process.env.MAPBOX_TOKEN%>';
-    </script>
+<link rel="stylesheet" href="/stylesheets/star.css">
+<script>
+  const mapToken = '<%=process.env.MAPBOX_TOKEN%>';
+</script>
 
-    <div class="row justify-content-center">
-        <div class="col-5 mt-5 mb-5">
-            <%- include('../partial/flashMessage') %>
-                <div class="card">
-
-
-                    <!-- img carousel start-->
-                    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <% foundData.images.forEach((img, i)=> { %>
-                                <div class="carousel-item <%= i===0 ? 'active' : '' %>">
-                                    <img src="<%= img.url %>" class="d-block w-100" height="600">
-                                </div>
-                                <% }) %>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                    <!-- img carousel end-->
-
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <%=foundData.title%>
-                        </h5>
-                        <h6 class="card-subtitle text-muted">
-                            <%= foundData.location %>
-                                </h4>
-                                <p class="card-text">
-                                    <%=foundData.description%>
-                                </p>
-                    </div>
-
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">$<%=foundData.price%>/night</li>
-                    </ul>
-
-                    <!-- currentUser || equals.. -->
-
-                    <div class="card-body">
-
-                        <% if(foundData.author.equals(currentUser._id)) { %>
-                            <a href="/main/<%=foundData._id%>/edit" class="card-link btn btn-warning">Update</a>
-                            <form action="/main/<%=foundData._id%>?_method=DELETE" method="POST" class="d-inline"
-                                onsubmit="return isYes()">
-                                <button class="btn btn-danger">Delete</button>
-                            </form>
-                            <% } %>
-                                <a href="/main/" class="card-link btn btn-dark">Back to main</a><br>
-                    </div>
-
-                    <div class="card-footer text-muted">
-                        2 days ago, created by <%= foundData.author.username %>
-                    </div>
-                </div>
+<div class="row justify-content-center p-2">
+  <div class="col-lg-5 mt-5">
+    <%- include('../partial/flashMessage') %>
+    <div class="card">
+      <div class="card-header"><b><%=foundData.title%></b></div>
+      <!-- img carousel start-->
+      <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <% foundData.images.forEach((img, i)=> { %>
+          <div class="carousel-item <%= i===0 ? 'active' : '' %>">
+            <img src="<%= img.url %>" class="d-block w-100" height="600">
+          </div>
+          <% }) %>
         </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      <!-- img carousel end-->
 
-        <div class="col-5 mt-5 mb-5">
+      <div class="card-body">
+        <h5 class="card-title">
+          <%=foundData.title%>
+        </h5>
+        <h6 class="card-subtitle text-muted">
+          <%= foundData.location %>
+          </h4>
+          <p class="card-text">
+            <%=foundData.description%>
+          </p>
+      </div>
 
-            <div id='map' style='height: 300px;'></div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">$<%=foundData.price%>/night</li>
+      </ul>
 
+      <!-- currentUser || equals.. -->
+
+      <div class="card-body">
+
+        <% if(foundData.author.equals(currentUser._id)) { %>
+        <a href="/main/<%=foundData._id%>/edit" class="card-link btn btn-warning">Update</a>
+        <form action="/main/<%=foundData._id%>?_method=DELETE" method="POST" class="d-inline" onsubmit="return isYes()">
+          <button class="btn btn-danger">Delete</button>
+        </form>
+        <% } %>
+        <a href="/main/" class="card-link btn btn-dark">Back to main</a><br>
+      </div>
+
+      <div class="card-footer text-muted">
+        2 days ago, created by <%= foundData.author.username %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5 mt-5">
+
+    <div class="card">
+        <div class="card-header"><b>Geo location</b></div>
+        <div id='map' style='height: 300px;'></div>
+    </div>
+
+    <div class="card mt-3 pb-2">
+        <div class="card-header"><b>Leave a review</b></div>
             <form action="/main/<%=foundData._id%>/reviews" method="POST" class="d-inline needs-validation" novalidate>
-
-                <h1>Leave a review %></h1>
-                <div class="mb-3">
-                    <fieldset class="starability-coinFlip">
-                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked
-                            aria-label="No rating." />
+                <div class="mt-3 p-2 d-flex flex-wrap justify-content-between">
+                    <fieldset class="starability-coinFlip col-6">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
                         <input type="radio" id="first-rate1" name="review[rating]" value="1" />
                         <label for="first-rate1" title="Terrible">1 star</label>
                         <input type="radio" id="first-rate2" name="review[rating]" value="2" />
@@ -90,44 +88,43 @@
                         <input type="radio" id="first-rate5" name="review[rating]" value="5" />
                         <label for="first-rate5" title="Amazing">5 stars</label>
                     </fieldset>
+                    <button class="btn btn-success mb-3 col-2">Save</button>
                     <textarea class="form-control" id="review" rows="4" name="review[body]" placeholder="Write a review" required></textarea>
                     <div class="invalid-feedback">Please input review</div>
                 </div>
 
-                <button class="btn btn-success mb-3">Save</button>
 
             </form>
 
-            <% for(review of foundData.reviews) { %>
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-9">
-                                <p class="starability-result" data-rating="<%= review.rating %>"></p>
-                                <h6 class="card-subtitle mb-2 text-muted">by <%= review.author.username %></h6>
-                                <%= review.body %>
-                            </div>
+        <% for(review of foundData.reviews) { %>
+            <div class="card mx-2">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-9">
+                            <p class="starability-result" data-rating="<%= review.rating %>"></p>
+                            <h6 class="card-subtitle mb-2 text-muted">by <%= review.author.username %></h6>
+                            <%= review.body %>
+                        </div>
 
-                            <div class="col d-flex justify-content-end">
-                                <form action="/main/<%=foundData._id%>/reviews/<%=review._id%>?_method=DELETE"
-                                    method="POST">
-                                    <% if(review.author.equals(currentUser._id)) { %>
-                                        <button class="btn btn-danger">X</button>
-                                        <% } %>
-
-                                </form>
-                            </div>
+                        <div class="col d-flex justify-content-end">    
+                            <form action="/main/<%=foundData._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
+                                <% if(review.author.equals(currentUser._id)) { %>
+                                    <button class="btn btn-danger">X</button>
+                                <% } %>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <% } %>
-        </div>
+            </div>
+        <% } %>
     </div>
+</div>
 
 
-    <script>
-        const campgrounds = <%- JSON.stringify(foundData) %>
-    </script>
 
-    <!-- /YELPCAMP/public is a basic route thanks to app.use(express.static(path.join(__dirname, 'public'))) -->
-    <script src="/javascript/mapbox.js"></script>
+<script>
+  const campgrounds = <%- JSON.stringify(foundData) %>
+</script>
+
+<!-- /YELPCAMP/public is a basic route thanks to app.use(express.static(path.join(__dirname, 'public'))) -->
+<script src="/javascript/mapbox.js"></script>

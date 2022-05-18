@@ -1,41 +1,32 @@
-<div id="map" style="width: 100%; height: 370px"></div>
+<div id="map" style="width: 100%; height: 450px"></div>
 
 <% layout('./layout/boilerplate') %>
+<%- include('../partial/flashMessage') %>
 
-<div class="container mt-5 mb-5">
 
-  <%- include('../partial/flashMessage') %>
-  <h1>Campgrounds!!</h1>
-  <% for(let eachData of foundData.reverse()) { %>
-  <div class="card"> <!-- w-75 -->
-    <div class="row">
-      <div class="col-md-4">
-        <img src="<%=eachData.images[0].url%>" class="img-fluid img-thumbnail">
-      </div>
+<div class="container-fluid col-11 mt-4">
+  <div class="d-flex flex-wrap card-deck">
 
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 class="card-title">
-            <%=eachData.title%>
-          </h5>
-          <h6 class="card-subtitle mb-2 text-muted">
-            <%=eachData.location%>
-          </h6>
-          <p class="card-text">
-            <%=eachData.description%><br><br>
-            <a href="/main/<%=eachData._id%>" class="btn btn-primary">Detail</a>
-          </p>
-        </div>
+    <% for(let eachData of foundData.reverse()) { %>
+    <div class="card col-lg-6 p-2">
+      <img class="card-img-top" src="<%=eachData.images[0].url%>" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title"><%=eachData.title%></h5>
+        <h8 class="card-subtitle"><%=eachData.location%></h8>
+        <p class="card-text"><%=eachData.description%></p>
+        <a href="/main/<%=eachData._id%>" class="btn btn-primary">Detail</a>
       </div>
     </div>
+    <% } %>
+
   </div>
-  <% } %>
 </div>
 
-<script>
-        const campgrounds = { features: <%- JSON.stringify(foundData) %>}
-</script>
+  <script>
+    const campgrounds = {
+      features: <%- JSON.stringify(foundData) %>
+    }
+  </script>
 
 
-
-<script src="/javascript/clustermap.js"></script>
+  <script src="/javascript/clustermap.js"></script>
